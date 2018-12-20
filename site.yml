@@ -1,19 +1,43 @@
 ---
 
-name: Create SSH config
-  hosts: vpn
+- name: create Hetzner-Cloud-Hosts
+  hosts: localhost
+  tasks:
+    - debug: var=email
+    - name: Create Host2
+      hcloud_server:
+        name:
+          - Host2
+        image: ubuntu-18.04
+        server_type: cx11
+        location: fsn1
+        token: "{{hetzner_api_key}}"
+        ssh_keys:
+          - "jre-hetz"
+      register: var_vpnhosts
+    - name: create Inventory entry
+      add_host:
+        name: "{{ item.name }}"
+        ansible_host: "{{ item.public_ipv4 }}"
+        ansible_user: root
+        groups:
+          - vpnhosts
+      with_items: "{{var_vpnhosts.servers }}"
+
+- name: Prepare nodes for Ansible
+  hosts: vpnhosts
   gather_facts: no
   tasks:
-    - name: Create SSH config
-      copy:
-        content: |
-          # config for {{ inventory_hostname }}
-          Host {{ inventory_hostname }}
-              HostName {{ ansible_host }}
-              User {{ ansible_user }}
-              IdentityFile {{ ansible_ssh_private_key_file }}
-              StrictHostKeyChecking no
-              UserKnownHostsFile /dev/null
-        dest: "~/.ssh/config.d/{{ inventory_hostname }}"
-        mode: "0640"
+    - name: Wait for SSH to be available
+      wait_for:
+        host: "{{ ansible_host }}"
+        port: 22
+        connect_timeout: 5
+        timeout: 60
       delegate_to: localhost
+    - name: Install updates
+      raw: "while lsof /var/lib/apt/lists/lock; do sleep 5; done && apt-get update && apt-get -y upgrade"
+    - name: Install Python
+      raw: "apt-get -y install python-pip"
+  tags:
+    - provision
