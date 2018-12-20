@@ -1,0 +1,19 @@
+---
+
+name: Create SSH config
+  hosts: vpn
+  gather_facts: no
+  tasks:
+    - name: Create SSH config
+      copy:
+        content: |
+          # config for {{ inventory_hostname }}
+          Host {{ inventory_hostname }}
+              HostName {{ ansible_host }}
+              User {{ ansible_user }}
+              IdentityFile {{ ansible_ssh_private_key_file }}
+              StrictHostKeyChecking no
+              UserKnownHostsFile /dev/null
+        dest: "~/.ssh/config.d/{{ inventory_hostname }}"
+        mode: "0640"
+      delegate_to: localhost

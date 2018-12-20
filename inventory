@@ -1,0 +1,6 @@
+all:
+  hosts:
+    vpn:
+      ansible_host: 116.203.36.181
+      ansible_connection: ssh
+      ansible_user: root
