@@ -1,0 +1,3 @@
+---
+hetzner_api_key: "{{vault_hetzner_api_key}}"
+email: johannes@familie-reize.de
