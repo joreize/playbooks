@@ -1,0 +1,26 @@
+---
+- name: Create VMs 
+  hosts: localhost
+  tasks:
+  - name: Create a virtual machine from a template
+    vmware_guest:
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      validate_certs: no
+      datacenter: "SWD" 
+      cluster: "SWD Infrastructure"
+      folder: "Infrastructure/Infra/RD/Infra/Kubernetes"
+      resource_pool: RD_Infra
+      name: test4ans
+      state: poweredon
+      template: "template_xenial_k8s"
+      guest_id: ubuntu64Guest
+      networks:
+      - name: LAN Build
+        start_connected: true
+      wait_for_ip_address: True
+      customization:
+        domain: "{{ guest_domain }}"
+        dns_suffix:
+          - "{{ guest_domain }}"
