@@ -1,6 +1,12 @@
 all:
-  hosts:
-    pi:
-      ansible_host: 192.168.178.68
-      ansible_user: "{{ pi_username }}"
-      ansible_password: "{{ pi_password }}"
+  children:
+    hetzner:
+      hosts:
+        controller1
+    local:
+      hosts:
+        pi:
+          ansible_host: 192.168.178.68
+      vars:  
+        ansible_user: "{{ pi_username }}"
+        ansible_password: "{{ pi_password }}"
