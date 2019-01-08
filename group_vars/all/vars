@@ -1,7 +1,4 @@
 ---
-hetzner_api_key: "{{vault_hetzner_api_key}}"
+pi_username: "{{vault_pi_username}}"
+pi_password: "{{ vault_pi_password }}"
 email: johannes@familie-reize.de
-vcenter_hostname: "{{ vault_vcenter_hostname }}"
-vcenter_username: "{{ vault_vcenter_username }}"
-vcenter_password: "{{ vault_vcenter_password }}"
-guest_domain: "{{ vault_guest_domain }}"

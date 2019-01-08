@@ -1,0 +1,19 @@
+---
+
+
+- name: Prepare nodes for Ansible
+  hosts: all
+  gather_facts: yes
+  tasks:
+    - name: Wait for SSH to be available
+      wait_for:
+        host: "{{ ansible_host }}"
+        port: 22
+        connect_timeout: 5
+        timeout: 60
+      delegate_to: localhost
+    - name: Install Python
+      raw: "sudo apt-get -y install python-pip"
+      become: yes
+  tags:
+    - provision

@@ -1,7 +1,6 @@
 all:
   hosts:
-    children:
-      vpnhosts:
-        vpn01:
-          ansible_host: 116.203.36.181
-          ansible_user: root
+    pi:
+      ansible_host: 192.168.178.68
+      ansible_user: "{{ pi_username }}"
+      ansible_password: "{{ pi_password }}"
